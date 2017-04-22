@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
-    <meta charset="UTF-8" />
+<head th:replace="fragments :: head">
 
+    <!--<meta charset="UTF-8" /> -->
     <!-- Try #1 put the data for the title explicitly in this file. -->
     <!-- <title>Title</title> -->
     <!--Try #2 gets the data for the title tag from the controller via Thymeleaf -->
-    <title th:text="${title}"></title>
+    <!--<title th:text="${title}"></title>-->
     <!--Try #3: the following would replace the title with "Default Title."
     This indicates that you can start constructing your templates by constructing them
     in a static way, and then gradually incorporate dynamic Thymeleaf elements into them.
     <title th:text="${title}">Default Title</title> -->
 </head>
+
 <body>
     <!-- This was try #1. <h1>My Cheese</h1> -->
     <!-- This is try #2, after adding to Gradle build file {addResources = true}
@@ -20,15 +21,17 @@
     <!-- Try #3: Get the title from the controller via using thymeleaf -->
     <h1 th:text="${title}"></h1>
 
+    <nav th:replace="fragments :: navigation"></nav>
+
     <!--What if no ArrayMap of cheeses were passed to the template?-->
     <!--Conditionally display an error message -->
-    <p th:unless="${cheeses}">No ArrayMap of cheeses was passed :-(</p>
+    <p th:unless="${cheeses}">No cheeses were passed :-(</p>
 
     <!--What if an empty ArrayMap were passed to the template?-->
     <!--Conditionally display an error message -->
     <p th:unless="${cheeses.size()}">Your list of cheeses is empty. Add a cheese.</p>
 
-    <a href="/cheese/add">Add a cheese.</a>
+    <!--<a href="/cheese/add">Add a cheese.</a>-->
 
     <!--This syntax handles both situations with a single error message-->
     <!--This makes sure that cheeses exists and its size is not 0 -->
@@ -37,7 +40,11 @@
     <!-- Create an unordered list of the cheeses. -->
     <ul>
         <!-- add the HTML element we'll want to repeat -->
-        <li th:each="cheese : ${cheeses}" th:text="${cheese}"></li>
+        <!-- This was for an ArrayList: <li th:each="cheese : ${cheeses}" th:text="${cheese}"></li>-->
+
+        <!--This is for a HashMap-->
+        <li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.key} + ', Description: ' + ${cheese.value}"></li>
+
     </ul>
 </body>
 </html>

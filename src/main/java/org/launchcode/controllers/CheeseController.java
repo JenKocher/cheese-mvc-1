@@ -2,17 +2,15 @@ package org.launchcode.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 //Chris Bay: "It's a good thing to keep your code clean,
-//so when these import statement aren't being used, they really should be deleted.
+//so when these import statement aren't being used, they really should be deleted."
 //I'm keeping it here as a reminder of what we learned.
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Jen on 4/20/2017.
@@ -26,11 +24,16 @@ import java.util.ArrayList;
 @RequestMapping("cheese")
 public class CheeseController {
 
+    //This ArrayList was changed to a HashMap so that a description field could be added.
+    //static ArrayList<String> cheeses = new ArrayList<>();
+    //Declare a HashMap, Key, Value
+    private static HashMap<String, String> cheeses = new HashMap<>();
+    private String cheese;
+    private String description;
 
-    static ArrayList<String> cheeses = new ArrayList<>();
 
     //Request path is /cheese/
-    @RequestMapping(value="")
+    @RequestMapping(value = "")
     //@ResponseBody would be used if the return portion of the method
     //held a string that was writing directly to the web page
     //@ResponseBody
@@ -73,35 +76,52 @@ public class CheeseController {
         //Let's pass an ArrayList that's empty
         //model.addAttribute("cheeses", cheeses);
 
-        //return "cheese/index";
         return "cheese/index";
     }
 
     //It's a common pattern to have both handlers refer to the same URL,
     //with the GET method being the display and the POST method being the processing.
-    @RequestMapping(value="add", method=RequestMethod.GET)
+    @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddCheeseForm(Model model) {
         model.addAttribute("title", "Add Cheese");
-        //return "cheese/add";
         return "cheese/add";
     }
 
-    @RequestMapping(value="add", method=RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     //For the processing of the form, we need to get data out of the request.
     //We can do it using the HttpServletRequest object.
     //public String processAddCheeseForm(HttpServletRequest request) {
-        //The string inside the getParameter needs to match the name given to the
-        //text box in the form.
-        //String cheeseName = request.getParameter("cheeseName");
-        //Alternatively, use the @RequestParam annotation.
-        //This will hand us a string that /corresponds to the data that was posted.
-     public String processAddCheeseForm(@RequestParam String cheeseName) {
+    //The string inside the getParameter needs to match the name given to the
+    //text box in the form.
+    //String cheeseName = request.getParameter("cheeseName");
+    //Alternatively, use the @RequestParam annotation.
+    //This will hand us a string that /corresponds to the data that was posted.
+    //
+    //The cheeseDescription parameter was added here later
+    public String processAddCheeseForm(@RequestParam String cheeseName, @RequestParam String cheeseDescription) {
         //add a cheese that you received from the form.
-        cheeses.add(cheeseName);
+        //Change ArrayList to HashMap
+        //This was for ArrayList: cheeses.add(cheeseName);
+        cheeses.put(cheeseName, cheeseDescription);
         //return "cheese/add";
-        //Typically, you would do "redirect:view name"
+        //Typically, you would do "redirect:view name
         //But this syntax will redirect to the path mentioned above in the
         //global @RequestMapping("cheese")
+        return "redirect:";
+    }
+
+    @RequestMapping(value="remove", method=RequestMethod.GET)
+    public String displayRemoveCheeseForm(Model model) {
+    //public String displayRemoveCheeseForm(Model model) {
+        model.addAttribute("title", "Remove Cheese");
+        model.addAttribute("cheeses", cheeses);
+        return "cheese/remove";
+    }
+
+    @RequestMapping(value="remove", method=RequestMethod.POST)
+    public String processRemoveCheeseForm(Model model, @RequestParam String cheeseName) {
+        cheeses.remove(cheeseName);
+        model.addAttribute("cheeses", cheeses);
         return "redirect:";
     }
 }

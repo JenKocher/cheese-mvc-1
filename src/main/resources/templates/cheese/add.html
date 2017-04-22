@@ -1,14 +1,20 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://wwww.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title th:text="${title}"></title>
+
+<head th:replace="fragments :: head">
+    <!--<meta charset="UTF-8" />
+    <title th:text="${title}"></title>-->
 </head>
+
 <body>
     <h1 th:text="${title}"></h1>
 
-    <!--Create a form for the user to add a cheese.-->
+    <nav th:replace="fragments :: navigation"></nav>
 
+    <br />
+
+    <!--Create a form for the user to add a cheese.-->
     <form method="post">
 
     <!-- Alternatively, you can add an "action" attribute to the form,
@@ -21,7 +27,11 @@
         and delineating the two by specifying one as a GET request in the handler and
         one as a POST request in the handler. -->
 
-        <input type="text" name="cheeseName" />
+        Enter name: <input type="text" name="cheeseName" /><br />
+
+        <!-- Add a way for user to input description of cheese. -->
+        Enter description: <input type="text" name="cheeseDescription" />
+
         <input type="submit" value="Add Cheese" />
     </form>
 
