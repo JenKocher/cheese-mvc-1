@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://wwww.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${title}"></title>
+</head>
+<body>
+    <h1 th:text="${title}"></h1>
+
+    <!--Create a form for the user to add a cheese.-->
+
+    <form method="post">
+
+    <!-- Alternatively, you can add an "action" attribute to the form,
+    with a URL path within a string (quotes), and that will be the URL that the form will
+    be submitted to, like this:
+    <form method="post" action="/cheese/new"> -->
+        <!-- Alternatively, the form can be submitted to the same URL where the form lives.
+        You implement that by leaving off the "action" attribute, having the identical
+        URLs be in the two handlers (one for the form and one for processing the form),
+        and delineating the two by specifying one as a GET request in the handler and
+        one as a POST request in the handler. -->
+
+        <input type="text" name="cheeseName" />
+        <input type="submit" value="Add Cheese" />
+    </form>
+
+</body>
+</html>
