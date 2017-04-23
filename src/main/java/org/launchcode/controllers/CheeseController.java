@@ -134,7 +134,7 @@ public class CheeseController {
     //This is the old way, using a String
     //public String processRemoveCheeseForm(Model model, @RequestParam String cheeseName) {
     // This is the new way, using a Cheese object.
-     public String processRemoveCheeseForm(Model model, @RequestParam Cheese cheeseObject){
+     public String processRemoveCheeseForm(Model model, @RequestParam String selectedCheese){
         //This was done using the HashMap and a string:  cheese.remove(cheeseName);
         //Now you need to iterate over the ArrayList of objects, test if each one is equal
         //to the cheese object you got back from the form, and delete it.
@@ -143,7 +143,7 @@ public class CheeseController {
 
         List<Cheese> found = new ArrayList<Cheese>();
         for(Cheese cheese:cheeses) {
-            if(cheese.isEqual(cheeseObject)){
+            if((cheese.getName() + cheese.getDescription()).equals(selectedCheese)){
                 found.add(cheese);
             }
         }

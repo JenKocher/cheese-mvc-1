@@ -16,10 +16,10 @@
     <!--This was for using a HashMap-->
     <!--<select name="cheeseName">-->
     <!--This is for using an ArrayList of Cheese objects-->
-    <select name="cheeseObject">
+    <select name="selectedCheese">
         <!--Using a HashMap-->
         <!--<option th:each="cheese : ${cheeses}" th:text="${cheese.key} + ', ' + ${cheese.value}" th:value="${cheese.key}"></option>-->
-        <option th:each="cheese : ${cheeses}" th:text="${cheese.name} + ', ' + ${cheese.description}" th:value="${cheese}"></option>
+        <option th:each="cheese : ${cheeses}" th:text="${cheese.name} + ', ' + ${cheese.description}" th:value="${cheese.name}+${cheese.description}"></option>
     </select>
     <input type="submit" value="Remove cheese" />
 </form>
