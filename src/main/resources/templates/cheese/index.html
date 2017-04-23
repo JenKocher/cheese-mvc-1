@@ -43,7 +43,9 @@
         <!-- This was for an ArrayList: <li th:each="cheese : ${cheeses}" th:text="${cheese}"></li>-->
 
         <!--This is for a HashMap-->
-        <li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.key} + ', Description: ' + ${cheese.value}"></li>
+        <!--<li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.key} + ', Description: ' + ${cheese.value}"></li>-->
+        <!--This is for an ArrayList of objects-->
+        <li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.name} + ', Description: ' + ${cheese.description}"></li>
 
     </ul>
 </body>

@@ -1,5 +1,6 @@
 package org.launchcode.controllers;
 
+import org.launchcode.models.Cheese;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Jen on 4/20/2017.
@@ -27,9 +29,12 @@ public class CheeseController {
     //This ArrayList was changed to a HashMap so that a description field could be added.
     //static ArrayList<String> cheeses = new ArrayList<>();
     //Declare a HashMap, Key, Value
-    private static HashMap<String, String> cheeses = new HashMap<>();
-    private String cheese;
-    private String description;
+    //private static HashMap<String, String> cheeses = new HashMap<>();
+    //private String cheese;
+    //private String description;
+
+    //refactor CheeseController to use Cheese objects instead of strings
+    static ArrayList<Cheese> cheeses = new ArrayList<>();
 
 
     //Request path is /cheese/
@@ -74,6 +79,7 @@ public class CheeseController {
         model.addAttribute("cheeses", cheeses);
 
         //Let's pass an ArrayList that's empty
+        //Note that this syntax works if cheeses is either an ArrayList or a HashMap
         //model.addAttribute("cheeses", cheeses);
 
         return "cheese/index";
@@ -101,8 +107,14 @@ public class CheeseController {
     public String processAddCheeseForm(@RequestParam String cheeseName, @RequestParam String cheeseDescription) {
         //add a cheese that you received from the form.
         //Change ArrayList to HashMap
-        //This was for ArrayList: cheeses.add(cheeseName);
-        cheeses.put(cheeseName, cheeseDescription);
+        //This was for ArrayList of strings: cheeses.add(cheeseName);
+        //This was for HashMap: cheeses.put(cheeseName, cheeseDescription);
+        //Now we need to do it for ArrayList of cheese objects
+        Cheese cheese = new Cheese();
+        cheese.setName(cheeseName);
+        cheese.setDescription(cheeseDescription);
+        cheeses.add(cheese);
+
         //return "cheese/add";
         //Typically, you would do "redirect:view name
         //But this syntax will redirect to the path mentioned above in the
@@ -119,8 +131,23 @@ public class CheeseController {
     }
 
     @RequestMapping(value="remove", method=RequestMethod.POST)
-    public String processRemoveCheeseForm(Model model, @RequestParam String cheeseName) {
-        cheeses.remove(cheeseName);
+    //This is the old way, using a String
+    //public String processRemoveCheeseForm(Model model, @RequestParam String cheeseName) {
+    // This is the new way, using a Cheese object.
+     public String processRemoveCheeseForm(Model model, @RequestParam Cheese cheeseObject){
+        //This was done using the HashMap and a string:  cheese.remove(cheeseName);
+        //Now you need to iterate over the ArrayList of objects, test if each one is equal
+        //to the cheese object you got back from the form, and delete it.
+        //To delete an object from an ArrayList, the syntax is:
+
+
+        List<Cheese> found = new ArrayList<Cheese>();
+        for(Cheese cheese:cheeses) {
+            if(cheese.isEqual(cheeseObject)){
+                found.add(cheese);
+            }
+        }
+        cheeses.removeAll(found);
         model.addAttribute("cheeses", cheeses);
         return "redirect:";
     }

@@ -1,0 +1,25 @@
+For each of the following field types, write:
+
+descriptions
+an example of a situation where you might use it
+
+To review, consult the lesson on encapsulating data.
+
+public field - "Public" allows a field or method to be used by anyone. The setters and getters for
+fields within a user-defined object should be set to public in order to allow access to the
+encapsulated data.
+
+private field - "Private" allows a field or method to be used only within the class in which it is defined.
+The fields within a user-defined object should be set to private in order to encapsulate the data.
+
+No modifier leaves access to the default of being private within the package, also expressed as
+"package-private".
+
+static field - A static field is shared by all instances of the class. It is used when each object doesn't need its
+own version of the variable. An example is absolute zero in Farenheit.
+
+final field - final is used with static to create a constant. Constants should be in all-caps with an underscore
+ to separate words. Initialize constants where they are declared to prevent someone else from initializing them
+ first, and make them public. Absolute zero in Farenheit could be expressed as a constant.
+
+

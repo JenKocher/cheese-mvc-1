@@ -13,8 +13,13 @@
 <p th:unless="${cheeses.size()}">Your list of cheeses is empty.</p>
 
 <form method="post">
-    <select name="cheeseName">
-        <option th:each="cheese : ${cheeses}" th:text="${cheese.key} + ', ' + ${cheese.value}" th:value="${cheese.key}"></option>
+    <!--This was for using a HashMap-->
+    <!--<select name="cheeseName">-->
+    <!--This is for using an ArrayList of Cheese objects-->
+    <select name="cheeseObject">
+        <!--Using a HashMap-->
+        <!--<option th:each="cheese : ${cheeses}" th:text="${cheese.key} + ', ' + ${cheese.value}" th:value="${cheese.key}"></option>-->
+        <option th:each="cheese : ${cheeses}" th:text="${cheese.name} + ', ' + ${cheese.description}" th:value="${cheese}"></option>
     </select>
     <input type="submit" value="Remove cheese" />
 </form>
