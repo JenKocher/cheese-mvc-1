@@ -7,10 +7,25 @@ public class Cheese {
 
     private String name;
     private String description;
+    private int cheeseId;
+    private static int nextId = 1;
 
+    /*
     public Cheese() {
         this.name = null;
         this.description=null;
+    }*/
+
+    //match video
+    public Cheese(String aName, String aDescription){
+        this();
+        name = aName;
+        description = aDescription;
+    }
+    //match video
+    public Cheese(){
+        cheeseId = nextId;
+        nextId++;
     }
 
     //set and get name
@@ -29,6 +44,12 @@ public class Cheese {
         return description;
     }
 
+    //set and get id
+    public void setCheeseId(int cheeseId){
+        this.cheeseId = cheeseId;
+    }
+    public int getCheeseId(){return cheeseId;}
+
     //test equality
     //@Override use this if the name of the method were equals
     public boolean isEqual(Object obj) {
@@ -44,6 +65,4 @@ public class Cheese {
             return false;
         }
     }
-
-
 }

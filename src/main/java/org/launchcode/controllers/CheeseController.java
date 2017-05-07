@@ -1,6 +1,7 @@
 package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
+import org.launchcode.models.CheeseData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,8 @@ public class CheeseController {
     //private String description;
 
     //refactor CheeseController to use Cheese objects instead of strings
-    static ArrayList<Cheese> cheeses = new ArrayList<>();
+    //refactor again to move this to CheeseData class in models package
+    //static ArrayList<Cheese> cheeses = new ArrayList<>();
 
 
     //Request path is /cheese/
@@ -76,8 +78,9 @@ public class CheeseController {
 
         //pass the ArrayList to the view
         //Uh oh, but what if you don't do that? How can you conditionally display a message in the template?
-        model.addAttribute("cheeses", cheeses);
-
+        //model.addAttribute("cheeses", cheeses);
+        //When we removed the data from the Controller, we switched to the following:
+        model.addAttribute("cheeses", CheeseData.getAll());
         //Let's pass an ArrayList that's empty
         //Note that this syntax works if cheeses is either an ArrayList or a HashMap
         //model.addAttribute("cheeses", cheeses);
@@ -92,7 +95,7 @@ public class CheeseController {
         model.addAttribute("title", "Add Cheese");
         return "cheese/add";
     }
-
+/**
     @RequestMapping(value = "add", method = RequestMethod.POST)
     //For the processing of the form, we need to get data out of the request.
     //We can do it using the HttpServletRequest object.
@@ -110,10 +113,13 @@ public class CheeseController {
         //This was for ArrayList of strings: cheeses.add(cheeseName);
         //This was for HashMap: cheeses.put(cheeseName, cheeseDescription);
         //Now we need to do it for ArrayList of cheese objects
-        Cheese cheese = new Cheese();
-        cheese.setName(cheeseName);
-        cheese.setDescription(cheeseDescription);
-        cheeses.add(cheese);
+        //Cheese cheese = new Cheese();
+        //cheese.setName(cheeseName);
+        //cheese.setDescription(cheeseDescription);
+        Cheese cheese = new Cheese(cheeseName, cheeseDescription);
+        //cheeses.add(cheese);
+        //Use separate model
+        CheeseData.add(cheese);
 
         //return "cheese/add";
         //Typically, you would do "redirect:view name
@@ -122,14 +128,57 @@ public class CheeseController {
         return "redirect:";
     }
 
+**/
+
+//Do the processAddCheeseForm once the data management and the data model are separate
+    @RequestMapping(value="add", method=RequestMethod.POST)
+    public String processAddCheeseForm(@ModelAttribute Cheese newCheese){
+        /**
+         *
+         * You are binding your model class to the RequestHandler
+         *
+         * Implied code.
+         * SpringBoot will create a new object using the default constructor.
+         * The default constructor initializes our cheeseId for us.
+         * The new object doesn't have a name or a description yet because those are
+         * not initialized within our default constructor.
+         *
+         * Note that SpringBoot doesn't know what other constructors we might have for our class.
+         * You need a default constructor for all of the model classes because there are going
+         * to be these situations where objects are automatically created by the
+         * framework and the only way that can happen is if we provide a default
+         * constructor.
+         *
+         * Cheese newCheese = new Cheese();
+         * The code on the next line is likely not exactly correct.
+         * The framework will go to the request that is coming in.
+         * It will look for a parameter that corresponds to the same name as the field we are
+         * trying to set, and it will call that setter.
+         *
+         * newCheese.setName(Request.getParameter("name"));
+         *
+         * It will do the same thing for the description:
+         * newCheese.setDescription(Request.getParameter("description"));
+         *
+         * This is why it is important for the form fields to match up with the names
+         * of the fields in the class.
+         * If they don't match, SpringBoot will not be able to correctly initialize our objects for us.
+         */
+        CheeseData.add(newCheese);
+        return "redirect:";
+    }
+
+
     @RequestMapping(value="remove", method=RequestMethod.GET)
     public String displayRemoveCheeseForm(Model model) {
     //public String displayRemoveCheeseForm(Model model) {
         model.addAttribute("title", "Remove Cheese");
-        model.addAttribute("cheeses", cheeses);
+        //model.addAttribute("cheeses", cheeses);
+        //use this once you've moved object into separate model package
+        model.addAttribute("cheeses", CheeseData.getAll());
         return "cheese/remove";
     }
-
+    /**  Old way, before separating out model into its own class
     @RequestMapping(value="remove", method=RequestMethod.POST)
     //This is the old way, using a String
     //public String processRemoveCheeseForm(Model model, @RequestParam String cheeseName) {
@@ -150,5 +199,46 @@ public class CheeseController {
         cheeses.removeAll(found);
         model.addAttribute("cheeses", cheeses);
         return "redirect:";
+     **/
+
+    /**
+     * This was how class leader did it before model was removed to its own class.
+     *
+     * @RequestMapping(value="remove", method=RequestMethod.POST)
+     * public String processRemoveCheeseForm(@RequestParam ArrayList<String> cheese){
+     *     for (String acheese : cheese){
+     *         cheeses.remove(acheese);
+     *     }
+     *     return("redirect:");
+     * }
+     *
+     */
+
+    //Now we change it to how it needs to be with data removed to model
+    @RequestMapping(value="remove", method=RequestMethod.POST)
+    public String processRemoveCheeseForm(@RequestParam int[] cheeseIds){
+        for (int cheeseId : cheeseIds) {
+            CheeseData.remove(cheeseId);
+        }
+        return("redirect:");
+    }
+
+    @RequestMapping(value="edit/{cheeseId}", method=RequestMethod.GET)
+    public String displayEditForm(Model model, @PathVariable int cheeseId){
+        model.addAttribute("cheese", CheeseData.getById(cheeseId));
+        return("cheese/edit");
+    }
+
+    @RequestMapping(value="edit/{cheeseId}", method=RequestMethod.POST)
+    //public String processEditForm(@RequestParam int cheeseId, @RequestParam String name, @RequestParam String description){
+    public String processEditForm(Model model, @RequestParam int cheeseId, @RequestParam String name, @RequestParam String description){
+        //query CheeseData for the cheese with the given Id
+        //update its name and description
+        CheeseData.getById(cheeseId).setName(name);
+        CheeseData.getById(cheeseId).setDescription(description);
+        //redirect the user to the home page
+        model.addAttribute("cheeses", CheeseData.getAll());
+        return("cheese/index");
+        //return("redirect:");
     }
 }

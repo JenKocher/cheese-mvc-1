@@ -4,7 +4,8 @@
 
 <head th:replace="fragments :: head"></head>
 
-<body>
+<!--add class for bootstrap formatting-->
+<body class="container">
 <h1 th:text="${title}"></h1>
 <nav th:replace="fragments :: navigation"></nav>
 <br />
@@ -12,16 +13,37 @@
 <p th:unless="${cheeses}">No cheeses were passed :-(</p>
 <p th:unless="${cheeses.size()}">Your list of cheeses is empty.</p>
 
-<form method="post">
+
+<!-- This includes the approach I used-->
+<!--<form method="post">-->
     <!--This was for using a HashMap-->
     <!--<select name="cheeseName">-->
     <!--This is for using an ArrayList of Cheese objects-->
-    <select name="selectedCheese">
+<!--    <select name="selectedCheese">-->
         <!--Using a HashMap-->
         <!--<option th:each="cheese : ${cheeses}" th:text="${cheese.key} + ', ' + ${cheese.value}" th:value="${cheese.key}"></option>-->
-        <option th:each="cheese : ${cheeses}" th:text="${cheese.name} + ', ' + ${cheese.description}" th:value="${cheese.name}+${cheese.description}"></option>
+<!--        <option th:each="cheese : ${cheeses}" th:text="${cheese.name} + ', ' + ${cheese.description}" th:value="${cheese.name}+${cheese.description}"></option>
     </select>
-    <input type="submit" value="Remove cheese" />
+    <input type="submit" value="Remove Cheese" />
+</form>-->
+
+<!--Here's the starting code for Launchcode
+<form method="post">
+    <div th:each="cheese : ${cheeses}" class="checkbox">
+        <input type="checkbox" name="cheese" th:value="${cheese.name}" th:id="${cheese.name}" />
+        <label th:for="${cheese.name}" th:text="${cheese.name}"></label>
+    </div>
+    <input type="submit" value="Remove Cheese" />
+</form>
+-->
+
+<form method="post">
+    <div th:each="cheese : ${cheeses}" class="checkbox">
+        <input type="checkbox" name="cheeseIds" th:value="${cheese.cheeseId}" th:id="${cheese.cheeseId}" />
+        <label th:for="${cheese.cheeseId}" th:text="${cheese.name}"></label>
+    </div>
+
+    <input type="submit" value="Remove Cheese" />
 </form>
 
 

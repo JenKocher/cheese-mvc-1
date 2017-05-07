@@ -13,7 +13,8 @@
     <title th:text="${title}">Default Title</title> -->
 </head>
 
-<body>
+<!--add class for bootstrap formatting-->
+<body class="container">
     <!-- This was try #1. <h1>My Cheese</h1> -->
     <!-- This is try #2, after adding to Gradle build file {addResources = true}
         under bootRun -->
@@ -38,15 +39,24 @@
     <!--<p th:unless="${cheeses} and ${cheeses.size()}">Either no ArrayList was passed or the passed ArrayList is empty. :-(</p>-->
 
     <!-- Create an unordered list of the cheeses. -->
-    <ul>
+    <!--<ul>-->
         <!-- add the HTML element we'll want to repeat -->
         <!-- This was for an ArrayList: <li th:each="cheese : ${cheeses}" th:text="${cheese}"></li>-->
 
         <!--This is for a HashMap-->
         <!--<li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.key} + ', Description: ' + ${cheese.value}"></li>-->
         <!--This is for an ArrayList of objects-->
-        <li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.name} + ', Description: ' + ${cheese.description}"></li>
+    <!--<li th:each="cheese : ${cheeses}" th:text="'Cheese: ' + ${cheese.name} + ', Description: ' + ${cheese.description}"></li>
+    </ul>-->
+    <!--replace unordered list with a table.-->
+    <table class="table">
+        <tr><th>Name</th><th>Description</th></tr>
+        <tr th:each="cheese : ${cheeses}">
+            <td th:text="${cheese.name}"></td>
+            <td th:text="${cheese.description}"></td>
+            <td><a th:href="@{'/cheese/edit/' + ${cheese.cheeseId}}">edit</a></td>
+        </tr>
+    </table>
 
-    </ul>
 </body>
 </html>
