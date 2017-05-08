@@ -238,6 +238,7 @@ public class CheeseController {
         CheeseData.getById(cheeseId).setDescription(description);
         //redirect the user to the home page
         model.addAttribute("cheeses", CheeseData.getAll());
+        model.addAttribute("title", "My Cheeses");
         return("cheese/index");
         //return("redirect:");
     }
