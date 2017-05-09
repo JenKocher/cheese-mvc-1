@@ -32,18 +32,46 @@
     </form>-->
 
     <!--Use example from video here-->
-    <form method="post" style="max-width:600px;">
+    <!--th:object: Use that object within this form element. It'll help generate the form.-->
+    <!--It'll help generate the form's input elements properly.-->
+    <form method="post" style="max-width:600px;" th:object="${cheese}">
         <div class="form-group">
-            <label for="name-field">Name</label>
+            <!--There's a label-input pair here.-->
+
+            <!--Once you have th:object, replace with below <label for="name-field">Name</label>-->
             <!--<input class="form-control" id="name-field" type="text" name="cheeseName" />-->
             <!--Change for model binding-->
-            <input class = "form-control" id="name-field" type="text" name="name" />
+            <!--Once you have th:object, replace with below-->
+            <!--<input class = "form-control" id="name-field" type="text" name="name" />-->
+
+            <label th:for="name"></label>
+            <input class="form-control" th:field="*{name}" />
+            <span th:errors="*{name}" class="error"></span>
+
         </div>
         <div class="form-group">
-            <label for="desc-field">Description</label>
+            <!--There's a label-input pair here.-->
+            <!--Once you have th:object, replace with below-->
+            <!--<label for="desc-field">Description</label>-->
             <!--<input class="form-control" id="desc-field" type="text" name="cheeseDescription" />-->
-            <!--Change for model bindging-->
-            <input class="form-control" id="desc-field" type="text" name="description" />
+            <!--Change for model binding-->
+            <!--Once you have th:object, replace with below-->
+            <!--<input class="form-control" id="desc-field" type="text" name="description" />-->
+
+            <label th:for="description"></label>
+            <input class="form-control" th:field="*{description}" />
+            <span th:errors="*{description}" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label th:for="type">Type</label>
+            <!--When user selects something in drop-down, you want that to go to
+            "type" poperty of cheese when it's bound in the model.-->
+            <!--Empty cheese object acts as a template for the form elements we are creating here.-->
+            <select th:field="*{type}">
+                <option th:each="cheeseType: ${cheeseTypes}"
+                        th:text="${cheeseType.name}"
+                        th:value="${cheeseType}"></option>
+            </select>
         </div>
         <input type="submit" value="Add Cheese" />
     </form>

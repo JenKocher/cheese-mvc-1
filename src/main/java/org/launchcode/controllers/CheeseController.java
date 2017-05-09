@@ -2,8 +2,10 @@ package org.launchcode.controllers;
 
 import org.launchcode.models.Cheese;
 import org.launchcode.models.CheeseData;
+import org.launchcode.models.CheeseType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 //Chris Bay: "It's a good thing to keep your code clean,
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 //I'm keeping it here as a reminder of what we learned.
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +96,14 @@ public class CheeseController {
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddCheeseForm(Model model) {
         model.addAttribute("title", "Add Cheese");
+        //add an empty Cheese object
+        //We can use the properties of this skeleton object to properly render the form.
+        //Note that no key-value syntax is used here.
+        //If no "key" is given, then a "key" is implied that is the name of the Class but
+        //in lower-case.
+        model.addAttribute(new Cheese());
+        //CheeseType.values() gets all the values of the enum, returns them as an array
+        model.addAttribute("cheeseTypes", CheeseType.values());
         return "cheese/add";
     }
 /**
@@ -132,7 +143,12 @@ public class CheeseController {
 
 //Do the processAddCheeseForm once the data management and the data model are separate
     @RequestMapping(value="add", method=RequestMethod.POST)
-    public String processAddCheeseForm(@ModelAttribute Cheese newCheese){
+    //@Valid says that bound model will be checked for validity
+    //based on annotations that we provided in the model class.
+    //It checks and stores messages alongside the object.
+    //Errors parameter is made available to us when we validate the object.
+    public String processAddCheeseForm(@ModelAttribute @Valid Cheese newCheese,
+                                       Errors errors, Model model){
         /**
          *
          * You are binding your model class to the RequestHandler
@@ -164,8 +180,18 @@ public class CheeseController {
          * of the fields in the class.
          * If they don't match, SpringBoot will not be able to correctly initialize our objects for us.
          */
-        CheeseData.add(newCheese);
-        return "redirect:";
+        //Check if there are any errors to validating the model during model binding
+        if (errors.hasErrors()){
+            //If there are errors, render the form again, just like what was done in
+            //display form controller
+            model.addAttribute("title", "Add Cheese");
+            return "cheese/add";
+        } else {
+            //Framework checked to see if the data was valid.
+            //Since it had no errors, the framework created the object and added it to the data store.
+            CheeseData.add(newCheese);
+            return "redirect:";
+        }
     }
 
 

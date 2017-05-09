@@ -19,6 +19,9 @@ public class User {
     public User(){};
 
     public String getUsername() {
+        //if (username.length()==0){
+        //    return null;
+        //} else return username;
         return username;
     }
 

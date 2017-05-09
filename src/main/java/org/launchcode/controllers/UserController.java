@@ -25,6 +25,8 @@ public class UserController {
         //How do you get values to show up in form if you don't send a user object in?
         User user = new User();
         model.addAttribute("user", user);
+        //Can the above two lines be done this way instead?
+        //mode.addAttribute(new User());
         return "user/add";
     }
 
